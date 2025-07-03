@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!-- Configuration des paramètres système pour Orange Money Webhook -->
+        <record id="orange_money_webhook_api_key" model="ir.config_parameter">
+            <field name="key">orange_money.webhook_api_key</field>
+            <field name="value">your_webhook_api_key_here</field>
+        </record>
+
+        <record id="orange_money_webhook_url" model="ir.config_parameter">
+            <field name="key">orange_money.webhook_url</field>
+            <field name="value">https://your-domain.com/orange_money/webhook/callback</field>
+        </record>
+
+        <record id="orange_money_merchant_code" model="ir.config_parameter">
+            <field name="key">orange_money.merchant_code</field>
+            <field name="value">123456</field>
+        </record>
+
+        <record id="orange_money_merchant_name" model="ir.config_parameter">
+            <field name="key">orange_money.merchant_name</field>
+            <field name="value">Your Business Name</field>
+        </record>
+
+    </data>
+</odoo>

@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Vue formulaire pour les transactions Orange Money -->
+    <record id="view_orange_money_transaction_form" model="ir.ui.view">
+        <field name="name">orange.money.transaction.form</field>
+        <field name="model">orange.money.transaction</field>
+        <field name="arch" type="xml">
+            <form string="Transaction Orange Money">
+                <header>
+                    <button name="action_confirm_manually" string="Confirmer" type="object"
+                        class="oe_highlight" attrs="{'invisible': [('status', '=', 'completed')]}" />
+                    <button name="action_mark_as_failed" string="Marquer comme échoué" type="object"
+                        attrs="{'invisible': [('status', '=', 'failed')]}" />
+                    <button name="action_check_status" string="Vérifier le statut" type="object"
+                        class="btn-secondary" />
+                    <field name="status" widget="statusbar"
+                        statusbar_visible="pending,completed,failed" />
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="orange_id" readonly="1" />
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="amount" />
+                            <field name="currency" />
+                            <field name="phone" />
+                            <field name="reference" />
+                        </group>
+                        <group>
+                            <field name="date" />
+                            <field name="created_at" />
+                            <field name="order_id" />
+                            <field name="order_state" />
+                            <field name="customer_id" />
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Données de callback" name="callback_data">
+                            <field name="callback_data" />
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" />
+                    <field name="activity_ids" />
+                    <field name="message_ids" />
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Vue arbre pour les transactions Orange Money -->
+    <record id="view_orange_money_transaction_tree" model="ir.ui.view">
+        <field name="name">orange.money.transaction.tree</field>
+        <field name="model">orange.money.transaction</field>
+        <field name="arch" type="xml">
+            <tree string="Transactions Orange Money" decoration-success="status == 'completed'"
+                decoration-danger="status == 'failed'" decoration-info="status == 'pending'">
+                <field name="orange_id" />
+                <field name="amount" />
+                <field name="currency" />
+                <field name="phone" />
+                <field name="status" />
+                <field name="date" />
+                <field name="order_id" />
+                <field name="order_state" />
+                <field name="customer_id" />
+            </tree>
+        </field>
+    </record>
+
+    <!-- Vue recherche pour les transactions Orange Money -->
+    <record id="view_orange_money_transaction_search" model="ir.ui.view">
+        <field name="name">orange.money.transaction.search</field>
+        <field name="model">orange.money.transaction</field>
+        <field name="arch" type="xml">
+            <search string="Rechercher des transactions">
+                <field name="orange_id" />
+                <field name="phone" />
+                <field name="reference" />
+                <field name="order_id" />
+                <field name="customer_id" />
+                <filter string="En attente" name="pending" domain="[('status', '=', 'pending')]" />
+                <filter string="Complété" name="completed" domain="[('status', '=', 'completed')]" />
+                <filter string="Échoué" name="failed" domain="[('status', '=', 'failed')]" />
+                <separator />
+                <filter string="Aujourd'hui" name="today"
+                    domain="[('date', '&gt;=', context_today().strftime('%Y-%m-%d'))]" />
+                <filter string="Cette semaine" name="this_week"
+                    domain="[('date', '&gt;=', (context_today() - datetime.timedelta(days=7)).strftime('%Y-%m-%d'))]" />
+                <filter string="Ce mois" name="this_month"
+                    domain="[('date', '&gt;=', (context_today().replace(day=1)).strftime('%Y-%m-%d'))]" />
+                <group expand="0" string="Grouper par">
+                    <filter string="Statut" name="group_by_status" context="{'group_by': 'status'}" />
+                    <filter string="Date" name="group_by_date" context="{'group_by': 'date:day'}" />
+                    <filter string="Commande" name="group_by_order"
+                        context="{'group_by': 'order_id'}" />
+                    <filter string="Client" name="group_by_customer"
+                        context="{'group_by': 'customer_id'}" />
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action pour les transactions Orange Money -->
+    <record id="action_orange_money_transaction" model="ir.actions.act_window">
+        <field name="name">Transactions Orange Money</field>
+        <field name="res_model">orange.money.transaction</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{'search_default_pending': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Aucune transaction Orange Money trouvée
+            </p>
+            <p>
+                Les transactions Orange Money apparaîtront ici lorsque des paiements seront
+                effectués.
+            </p>
+        </field>
+    </record>
+
+    <!-- Menu pour les transactions Orange Money -->
+    <menuitem id="menu_orange_money_transaction"
+        name="Transactions Orange Money"
+        parent="account.menu_finance"
+        action="action_orange_money_transaction"
+        sequence="20" />
+
+</odoo>

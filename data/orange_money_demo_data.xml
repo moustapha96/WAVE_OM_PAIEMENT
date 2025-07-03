@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!-- Configuration par défaut Orange Money -->
+        <record id="default_orange_money_config" model="orange.money.config">
+            <field name="merchant_name">CCBM SHOP</field>
+            <field name="merchant_code">123456</field>
+            <field name="orange_base_url">https://api.sandbox.orange-sonatel.com</field>
+            <field name="orange_client_id">your_client_id_here</field>
+            <field name="orange_client_secret">your_client_secret_here</field>
+            <field name="orange_api_key">your_api_key_here</field>
+            <field name="callback_success_url">https://your-domain.com/payment/success</field>
+            <field name="callback_cancel_url">https://your-domain.com/payment/cancel</field>
+            <field name="webhook_url">https://your-domain.com/orange_money/webhook/callback</field>
+            <field name="webhook_api_key">your_webhook_api_key_here</field>
+            <field name="default_validity">300</field>
+            <field name="max_validity">86400</field>
+            <field name="test_mode">True</field>
+            <field name="active">True</field>
+        </record>
+
+        <!-- Configuration de production (exemple) -->
+        <record id="production_orange_money_config" model="orange.money.config">
+            <field name="merchant_name">CCBM SHOP PRODUCTION</field>
+            <field name="merchant_code">654321</field>
+            <field name="orange_base_url">https://api.orange-sonatel.com</field>
+            <field name="orange_client_id">prod_client_id_here</field>
+            <field name="orange_client_secret">prod_client_secret_here</field>
+            <field name="orange_api_key">prod_api_key_here</field>
+            <field name="callback_success_url">https://your-domain.com/payment/success</field>
+            <field name="callback_cancel_url">https://your-domain.com/payment/cancel</field>
+            <field name="webhook_url">https://your-domain.com/orange_money/webhook/callback</field>
+            <field name="webhook_api_key">prod_webhook_api_key_here</field>
+            <field name="default_validity">300</field>
+            <field name="max_validity">86400</field>
+            <field name="test_mode">False</field>
+            <field name="active">False</field>
+        </record>
+
+    </data>
+</odoo>

@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Vue formulaire simple pour les tests Orange Money -->
+    <record id="view_orange_money_test_page_form" model="ir.ui.view">
+        <field name="name">orange.money.test.page.form</field>
+        <field name="model">orange.money.config</field>
+        <field name="arch" type="xml">
+            <form string="Tests Orange Money" create="false" edit="false">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>Tests Orange Money</h1>
+                        <h3>
+                            <field name="merchant_name" readonly="1" />
+                        </h3>
+                        <div class="o_row">
+                            <span attrs="{'invisible': [('test_mode', '=', False)]}"
+                                class="badge badge-warning">MODE TEST</span>
+                            <span attrs="{'invisible': [('test_mode', '=', True)]}"
+                                class="badge badge-success">MODE PRODUCTION</span>
+                        </div>
+                    </div>
+
+                    <!-- Champs nécessaires pour les conditions attrs -->
+                    <field name="test_mode" invisible="1" />
+                    <field name="webhook_url" invisible="1" />
+
+                    <div class="row mt-4">
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5>🔑 Test Token</h5>
+                                </div>
+                                <div class="card-body text-center">
+                                    <p>Tester la génération de token d'accès</p>
+                                    <button name="action_generate_test_token" string="Générer Token"
+                                        type="object" class="btn btn-primary btn-lg" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5>📱 Test QR Code</h5>
+                                </div>
+                                <div class="card-body text-center">
+                                    <p>Tester la génération de QR Code</p>
+                                    <button name="action_test_qr_generation"
+                                        string="Générer QR Code" type="object"
+                                        class="btn btn-warning btn-lg" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mt-3">
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5>🔍 Test Complet</h5>
+                                </div>
+                                <div class="card-body text-center">
+                                    <p>Tester toute la configuration</p>
+                                    <button name="action_test_configuration" string="Test Complet"
+                                        type="object" class="btn btn-success btn-lg" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5>🌐 Test Webhook</h5>
+                                </div>
+                                <div class="card-body text-center">
+                                    <p>Tester l'URL du webhook</p>
+                                    <button name="action_test_webhook" string="Test Webhook"
+                                        type="object" class="btn btn-info btn-lg"
+                                        attrs="{'invisible': [('webhook_url', '=', False)]}" />
+                                    <p attrs="{'invisible': [('webhook_url', '!=', False)]}"
+                                        class="text-muted">
+                                        Webhook non configuré
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Résultats des tests -->
+                    <div class="row mt-4" attrs="{'invisible': [('last_test_result', '=', False)]}">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5>📋 Résultat du dernier test</h5>
+                                    <small class="text-muted">
+                                        <field name="last_test_date" readonly="1" />
+                                    </small>
+                                </div>
+                                <div class="card-body">
+                                    <field name="last_test_result" widget="text" readonly="1" />
+                                    <div class="mt-2">
+                                        <button name="action_clear_test_logs" string="Effacer"
+                                            type="object" class="btn btn-sm btn-secondary" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Informations de configuration -->
+                    <div class="row mt-4">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5>ℹ️ Informations</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <strong>Code Marchand:</strong>
+                                            <field name="merchant_code" readonly="1" />
+                                        </div>
+                                        <div class="col-md-6">
+                                            <strong>URL API:</strong>
+                                            <field name="orange_base_url" readonly="1" />
+                                        </div>
+                                    </div>
+                                    <div class="row mt-2">
+                                        <div class="col-md-6">
+                                            <strong>Client ID:</strong>
+                                            <span class="text-muted">***configuré***</span>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <strong>API Key:</strong>
+                                            <span class="text-muted">***configuré***</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>

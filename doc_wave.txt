@@ -1,0 +1,54 @@
+Voici un exemple de la manière dont vous pouvez construire une requête POST avec Authorizationdes Content-Typeen-têtes et des données JSON :
+
+curl \
+-X POST \
+-H 'Authorization: Bearer wave_sn_prod_YhUNb9d...i4bA6' \
+-H 'Content-Type: application/json' \
+-d '{
+      "amount": "1000",
+      "currency": "XOF",
+      "error_url": "https://example.com/error",
+      "success_url": "https://example.com/success"
+    }' \
+https://api.wave.com/v1/checkout/sessions
+
+Détails de l'erreur
+Voici à quoi pourrait ressembler le corps du message d’une réponse à une demande non valide :
+
+{
+  "code": "request-validation-error",
+  "message": "Request invalid",
+  "details": [{
+    "loc": ["payments", 1, "mobile"],
+    "msg": "field required"
+  }]
+}
+Code	Titre	Descriptions
+400	Mauvaise demande	Le serveur ne peut pas traiter la requête car elle est mal formée.
+401	Non autorisé	La clé API n'est pas valide.
+403	Interdit	La clé API ne dispose pas des autorisations appropriées pour la demande.
+404	Non trouvé	Vous avez demandé un objet ou une page qui n'a pas pu être trouvé.
+422	Entité non traitable	La requête est correctement formée mais le serveur n'est pas en mesure de traiter le contenu.
+429	Trop de demandes	La limite de débit a été dépassée, c'est-à-dire que le serveur a reçu trop de requêtes dans une période donnée.
+500	Erreur interne du serveur	Le serveur a rencontré une erreur. Veuillez réessayer ultérieurement.
+503	service non disponible	Le serveur ne peut pas traiter la requête en raison d'une surcharge temporaire ou d'une maintenance planifiée. Réessayez ultérieurement.
+
+
+API d'équilibre et de rapprochement
+L'API Balance permet de récupérer le solde et de répertorier toutes les transactions traitées par votre portefeuille Wave Business. Grâce à elle, vous pourrez facilement automatiser vos rapprochements quotidiens, configurer des alertes de solde, effectuer des remboursements, et bien plus encore.
+
+Pour les notifications en temps réel sur les paiements reçus par votre compte, vous ne devez pas utiliser cette API, mais des Webhooks .
+
+POINTS FINAUX :
+
+OBTENIR /v1/balance
+OBTENIR /v1/transactions
+POST /v1/transactions/:transaction_id/refund
+
+URL de base
+Tous les chemins de point de terminaison référencés dans le document API sont relatifs à une URL de base, https://api.wave.com .
+
+Authentification
+L'authentification auprès de l'API s'effectue via des clés API. Ces clés sont liées à un portefeuille d'entreprise unique et ne peuvent interagir qu'avec celui-ci.
+
+Si vous devez interagir avec plusieurs portefeuilles de votre réseau, vous devrez obtenir une clé par portefeuille.
