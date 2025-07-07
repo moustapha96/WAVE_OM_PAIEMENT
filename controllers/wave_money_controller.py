@@ -8,6 +8,8 @@ import json
 import logging
 import werkzeug
 from datetime import datetime
+import base64
+
 
 _logger = logging.getLogger(__name__)
 
@@ -792,9 +794,15 @@ class WaveMoneyController(http.Controller):
             if not partner:
                 return self._make_response({'success': False, 'error': 'Partner not found'}, 404)
 
-            resultats = [] 
+            resultats = []
             transactions = request.env['wave.transaction'].sudo().search([('partner_id', '=', partner_id)])
+
             for transaction_up in transactions:
+                # Convertir les données binaires en base64
+                facture_pdf_base64 = None
+                if transaction_up.facture_pdf:
+                    facture_pdf_base64 = base64.b64encode(transaction_up.facture_pdf).decode('utf-8')
+
                 resultats.append({
                     'transaction_id': transaction_up.transaction_id,
                     'custom_transaction_id': transaction_up.transaction_id,
@@ -809,21 +817,19 @@ class WaveMoneyController(http.Controller):
                     'phone': transaction_up.phone,
                     'description': transaction_up.description,
                     'payment_url': transaction_up.payment_link_url,
-                    'order_id': transaction_up.order_id.id ,
-                    'order_type' : transaction_up.order_id.type_sale,
+                    'order_id': transaction_up.order_id.id,
+                    'order_type': transaction_up.order_id.type_sale,
                     'order': self._order_to_dict(transaction_up.order_id),
                     'type_sale': transaction_up.order_id.type_sale,
-                    'partner_id': transaction_up.partner_id.id ,
-                    'created_at': transaction_up.created_at.isoformat() ,
-                    'updated_at': transaction_up.updated_at.isoformat() ,
-                    'completed_at': transaction_up.completed_at.isoformat(),
-                    'facture_pdf' : transaction_up.facture_pdf,
+                    'partner_id': transaction_up.partner_id.id,
+                    'created_at': transaction_up.created_at.isoformat(),
+                    'updated_at': transaction_up.updated_at.isoformat(),
+                    'completed_at': transaction_up.completed_at.isoformat() if transaction_up.completed_at else None,
+                    'facture_pdf': facture_pdf_base64,
                     'url_facture': transaction_up.url_facture
-                })   
-          
+                })
+
             return Response(json.dumps(resultats), status=200, mimetype='application/json')
-    
+
         except Exception as e:
             return Response(json.dumps({'success': False, 'error': str(e)}), status=400, mimetype='application/json')
-
-
