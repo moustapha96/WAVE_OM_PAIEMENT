@@ -646,17 +646,17 @@ class WaveMoneyController(http.Controller):
                         else:
                             return {'success': False, 'error': 'Failed to create payment transaction', 'custom_transaction_id': transaction.transaction_id}
                     elif new_status == 'failed':
-                        return {'success': False, 'transaction_updated': False, 'custom_transaction_id': transaction.transaction_id}
+                        return {'success': True, 'transaction_updated': False, 'custom_transaction_id': transaction.transaction_id}
                     
             elif event_type == "checkout.session.payment_failed":
                 _logger.error(f"Event type failed: {event_type}")
-                return {'error': f"Event type failed: {event_type}", 'success': False}
+                return {'error': f"Event type failed: {event_type}", 'success': True}
             else:
                 _logger.error(f"Unknown event type: {event_type}")
-                return {'error': f"Unknown event type: {event_type}", 'success': False}
+                return {'error': f"Unknown event type: {event_type}", 'success': True}
         except Exception as e:
             _logger.error(f"Error processing webhook data: {str(e)}")
-            return {'error': f'Processing error: {str(e)}', 'success': False}
+            return {'error': f'Processing error: {str(e)}', 'success': True}
 
     @http.route('/wave/webhook', type='http', auth='public', csrf=False, methods=['POST'])
     def wave_webhook(self, **kwargs):
@@ -695,16 +695,18 @@ class WaveMoneyController(http.Controller):
                 webhook_data = json.loads(body.decode('utf-8'))
             except json.JSONDecodeError:
                 _logger.error("Invalid JSON in webhook payload")
-                return Response(json.dumps({'error': 'Invalid JSON'}), status=400, mimetype='application/json')
+                # return Response(json.dumps({'error': 'Invalid JSON'}), status=400, mimetype='application/json')
+                return Response(json.dumps(webhook_data), status=200, mimetype='application/json')
+            
             # Traiter le webhook
             result = self._process_wave_webhook(webhook_data)
             if result.get('success'):
                 return Response(json.dumps({'status': 'success'}), status=200, mimetype='application/json')
             else:
-                return Response(json.dumps({'error': result.get('error', 'Processing failed')}), status=400, mimetype='application/json')
+                return Response(json.dumps({'error': result.get('error', 'Processing failed')}), status=200, mimetype='application/json')
         except Exception as e:
             _logger.error(f"Error processing Wave webhook: {str(e)}")
-            return Response(json.dumps({'error': 'Internal server error'}), status=500, mimetype='application/json')
+            return Response(json.dumps({'error': 'Internal server error'}), status=200, mimetype='application/json')
 
     def convert_iso_format_to_custom_format(self , iso_date):
         try:
@@ -716,6 +718,11 @@ class WaveMoneyController(http.Controller):
         except ValueError as e:
             _logger.error(f"Error converting date format: {str(e)}")
             return None
+
+
+
+
+
 
     def _create_payment_transaction(self, transaction):
         try:
