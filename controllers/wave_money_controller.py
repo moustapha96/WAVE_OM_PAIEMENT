@@ -782,5 +782,48 @@ class WaveMoneyController(http.Controller):
         except Exception as e:
             _logger.error("Erreur lors de la création du paiement: %s", str(e))
             return False
+        
+    # liste des transaction d'un partenaire
+
+    @http.route('/api/payment/partner/<int:partner_id>/transactions', type='http', auth='public', cors='*', methods=['GET'])
+    def get_partner_transactions(self, partner_id):
+        try:
+            partner = self.env['res.partner'].sudo().search([('id', '=', partner_id)])
+            if not partner:
+                return self._make_response({'success': False, 'error': 'Partner not found'}, 404)
+
+            resultats = [] 
+            transactions = self.env['wave.transaction'].sudo().search([('partner_id', '=', partner_id)])
+            for transaction_up in transactions:
+                resultats.append({
+                    'transaction_id': transaction_up.transaction_id,
+                    'custom_transaction_id': transaction_up.transaction_id,
+                    'wave_id': transaction_up.wave_id,
+                    'session_id': transaction_up.wave_id,
+                    'reference': transaction_up.reference,
+                    'status': transaction_up.status,
+                    'checkout_status': transaction_up.checkout_status,
+                    'payment_status': transaction_up.payment_status,
+                    'amount': transaction_up.amount,
+                    'currency': transaction_up.currency,
+                    'phone': transaction_up.phone,
+                    'description': transaction_up.description,
+                    'payment_url': transaction_up.payment_link_url,
+                    'order_id': transaction_up.order_id.id ,
+                    'order_type' : transaction_up.order_id.type_sale,
+                    'order': self._order_to_dict(transaction_up.order_id),
+                    'type_sale': transaction_up.order_id.type_sale,
+                    'partner_id': transaction_up.partner_id.id ,
+                    'created_at': transaction_up.created_at.isoformat() ,
+                    'updated_at': transaction_up.updated_at.isoformat() ,
+                    'completed_at': transaction_up.completed_at.isoformat(),
+                    'facture_pdf' : transaction_up.facture_pdf,
+                    'url_facture': transaction_up.url_facture
+                })   
+
+            return self._make_response(resultats, 200)
+    
+        except Exception as e:
+            return self._make_response([], 200)
 
 
