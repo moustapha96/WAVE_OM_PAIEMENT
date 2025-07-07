@@ -820,10 +820,9 @@ class WaveMoneyController(http.Controller):
                     'facture_pdf' : transaction_up.facture_pdf,
                     'url_facture': transaction_up.url_facture
                 })   
-
             return self._make_response(resultats, 200)
     
         except Exception as e:
-            return self._make_response([], 200)
+            return self._make_response({'success': False, 'error': str(e)}, 400)
 
 
