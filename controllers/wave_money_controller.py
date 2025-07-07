@@ -788,12 +788,12 @@ class WaveMoneyController(http.Controller):
     @http.route('/api/payment/partner/<int:partner_id>/transactions', type='http', auth='public', cors='*', methods=['GET'])
     def get_partner_transactions(self, partner_id):
         try:
-            partner = self.env['res.partner'].sudo().search([('id', '=', partner_id)])
+            partner = request.env['res.partner'].sudo().search([('id', '=', partner_id)])
             if not partner:
                 return self._make_response({'success': False, 'error': 'Partner not found'}, 404)
 
             resultats = [] 
-            transactions = self.env['wave.transaction'].sudo().search([('partner_id', '=', partner_id)])
+            transactions = request.env['wave.transaction'].sudo().search([('partner_id', '=', partner_id)])
             for transaction_up in transactions:
                 resultats.append({
                     'transaction_id': transaction_up.transaction_id,
