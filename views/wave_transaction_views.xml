@@ -9,9 +9,23 @@
                 <header>
                     <button name="action_refresh_status" string="Actualiser le statut" type="object"
                         class="btn-primary" />
+
+                    <button name="action_download_invoice" type="object"
+                        string="Télécharger la facture" class="btn-secondary"
+                        attrs="{'invisible': [('facture_pdf', '=', False)]}" />
+
+                    <button name="action_view_invoice_url" type="object" string="Voir la facture"
+                        class="btn-secondary" attrs="{'invisible': [('url_facture', '=', False)]}" />
+
+                    <button name="action_regenerate_invoice" type="object"
+                        string="Régénérer la facture" class="btn-warning"
+                        attrs="{'invisible': [('status', '!=', 'completed')]}" />
+
+
                     <button name="action_view_payment_link" string="Voir le lien de paiement"
                         type="object" class="btn-secondary"
                         attrs="{'invisible': [('payment_link_url', '=', False)]}" />
+
                     <field name="status" widget="statusbar"
                         statusbar_visible="pending,completed,failed" />
                 </header>
@@ -43,6 +57,8 @@
                             <field name="currency" />
                             <field name="phone" />
                             <field name="description" />
+                            <field name="payment_status" />
+
                         </group>
                         <group string="Relations">
                             <field name="order_id" />
@@ -50,8 +66,19 @@
                         </group>
                     </group>
 
+                    <!-- Nouvelle section pour la facture -->
+                    <group name="invoice_info" string="Facture"
+                        attrs="{'invisible': [('status', '!=', 'completed')]}">
+                        <field name="url_facture" widget="url" />
+                        <field name="facture_filename" />
+                        <field name="facture_pdf" filename="facture_filename"
+                            attrs="{'invisible': [('facture_pdf', '=', False)]}" />
+                    </group>
+
+
                     <group string="URLs et liens">
                         <field name="payment_link_url" widget="url" />
+                        <field name="checkout_status" />
                     </group>
 
                     <group string="Dates">
