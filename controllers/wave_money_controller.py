@@ -825,7 +825,7 @@ class WaveMoneyController(http.Controller):
                     'created_at': transaction_up.created_at.isoformat(),
                     'updated_at': transaction_up.updated_at.isoformat(),
                     'completed_at': transaction_up.completed_at.isoformat() if transaction_up.completed_at else None,
-                    'facture_pdf': facture_pdf_base64,
+                    # 'facture_pdf': facture_pdf_base64,
                     'url_facture': transaction_up.url_facture
                 })
 
