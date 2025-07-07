@@ -820,9 +820,10 @@ class WaveMoneyController(http.Controller):
                     'facture_pdf' : transaction_up.facture_pdf,
                     'url_facture': transaction_up.url_facture
                 })   
-            return self._make_response(resultats, 200)
+          
+            return Response(json.dumps(resultats), status=200, mimetype='application/json')
     
         except Exception as e:
-            return self._make_response({'success': False, 'error': str(e)}, 400)
+            return Response(json.dumps({'success': False, 'error': str(e)}), status=400, mimetype='application/json')
 
 
