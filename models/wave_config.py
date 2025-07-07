@@ -41,7 +41,7 @@ class WaveConfig(models.Model):
     webhook_url = fields.Char(
         string='URL de Webhook', 
         required=True,
-        default='https://orbitcity.sn/api/wave/webhook',
+        default='https://orbitcity.sn/wave/webhook',
         help="URL que Wave utilisera pour envoyer les notifications de statut"
     )
     
@@ -152,8 +152,6 @@ class WaveConfig(models.Model):
             'target': 'current',
         }
 
-
-   
     def action_test_webhook(self):
         """Tester l'URL du webhook"""
         try:
