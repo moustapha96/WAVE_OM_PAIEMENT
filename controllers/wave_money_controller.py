@@ -72,7 +72,7 @@ class WaveMoneyController(http.Controller):
                 "amount": amount,
                 "currency": currency,
                 # "success_url":  f"https://dev.ccbmshop.com/wave-paiement?transaction={transaction_id}",
-                "success_url":  f"https://ccbmshop.com/wave-paiement?transaction={transaction_id}",
+                "success_url":  f"https://www.ccbmshop.com/wave-paiement?transaction={transaction_id}",
                 "error_url": config.callback_url
             }
 
@@ -150,6 +150,8 @@ class WaveMoneyController(http.Controller):
                 result = self._refresh_transaction_status(transaction)
                 if result:
                     transaction_up = request.env['wave.transaction'].sudo().search([('transaction_id', '=', transaction_id)], limit=1)
+
+
                     return self._make_response({
                         'success': True,
                         'transaction_id': transaction_up.transaction_id,
@@ -174,6 +176,9 @@ class WaveMoneyController(http.Controller):
                         'updated_at': transaction_up.updated_at.isoformat() if transaction.updated_at else None,
                         'completed_at': transaction_up.completed_at.isoformat() if transaction.completed_at else None
                     }, 200)
+                
+
+
                 else:
                     return self._make_response({
                         'success': True,
@@ -196,44 +201,7 @@ class WaveMoneyController(http.Controller):
             return self._make_response({"error": str(e)}, 400)
 
 
-    @http.route('/api/payment/wave/status/by-transaction-id/<string:custom_transaction_id>', type='json', auth='public', cors='*', methods=['GET'])
-    def get_wave_payment_status_by_transaction_id(self, custom_transaction_id, **kwargs):
-        """Vérifier le statut d'un paiement Wave par transaction_id personnalisé"""
-        try:
-            transaction = request.env['wave.transaction'].sudo().search([('transaction_id', '=', custom_transaction_id)], limit=1)
-            
-            if not transaction:
-                return {'error': f'Transaction not found for transaction_id: {custom_transaction_id}', 'success': False}
-
-            # Optionnel: Rafraîchir le statut depuis Wave
-            if kwargs.get('refresh', False):
-                self._refresh_transaction_status(transaction)
-
-            return {
-                'success': True,
-                'transaction_id': transaction.id,
-                'custom_transaction_id': transaction.transaction_id,
-                'wave_id': transaction.wave_id,
-                'session_id': transaction.wave_id,
-                'reference': transaction.reference,
-                'status': transaction.status,
-                'amount': transaction.amount,
-                'currency': transaction.currency,
-                'phone': transaction.phone,
-                'description': transaction.description,
-                'payment_url': transaction.payment_link_url,
-                'order_id': transaction.order_id.id if transaction.order_id else False,
-                'partner_id': transaction.partner_id.id if transaction.partner_id else False,
-                'created_at': transaction.created_at.isoformat() if transaction.created_at else None,
-                'updated_at': transaction.updated_at.isoformat() if transaction.updated_at else None,
-                'completed_at': transaction.completed_at.isoformat() if transaction.completed_at else None
-            }
-
-        except Exception as e:
-            _logger.error(f"Error getting Wave payment status by transaction_id: {str(e)}")
-            return {'error': f'Internal error: {str(e)}', 'success': False}
-
-
+    
     @http.route('/api/payment/wave/session/<string:session_id>', type='http', auth='public', cors='*', methods=['GET'])
     def get_wave_session(self, session_id, **kwargs):
         """Récupérer les détails d'une session Wave par son ID"""
