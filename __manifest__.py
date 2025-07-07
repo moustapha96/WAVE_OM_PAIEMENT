@@ -10,6 +10,7 @@
         'sale',
         'account',
         'mail',
+        'orbit'
     ],
     'installable': True,
     'auto_install': False,
@@ -27,6 +28,8 @@
         'views/wave_transaction_views.xml',
         'views/wave_menu.xml',
         'views/menu.xml',
+
+        'views/sale_order_view.xml'
     ],
     'demo': [
         'data/orange_money_demo_data.xml',
