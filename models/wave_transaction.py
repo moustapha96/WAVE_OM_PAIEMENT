@@ -821,11 +821,13 @@ class WaveTransaction(models.Model):
         ('expired', 'Expiré'),
         ('refunded', 'Remboursé')
     ], string='Statut', default='pending', required=True, index=True)
+
     checkout_status = fields.Selection([
         ('open', 'Ouvert'),
         ('complete', 'Complété'),
         ('expired', 'Expiré')
     ], string='Statut de checkout', help="Statut de checkout de Wave")
+    
     payment_status = fields.Selection([
         ('processing', 'En cours'),
         ('cancelled', 'Annulé'),

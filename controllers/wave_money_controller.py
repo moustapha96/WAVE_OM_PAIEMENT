@@ -71,7 +71,8 @@ class WaveMoneyController(http.Controller):
             payload = {
                 "amount": amount,
                 "currency": currency,
-                "success_url":  f"https://dev.ccbmshop.com/wave-paiement?transaction={transaction_id}",
+                # "success_url":  f"https://dev.ccbmshop.com/wave-paiement?transaction={transaction_id}",
+                "success_url":  f"https://ccbmshop.com/wave-paiement?transaction={transaction_id}",
                 "error_url": config.callback_url
             }
 
@@ -90,6 +91,7 @@ class WaveMoneyController(http.Controller):
 
             if response.status_code in [200, 201]:
                 data = response.json()
+                _logger.info(f"Wave checkout sessions response: {data}")
                 # Créer la transaction dans Odoo
                 wave_transaction = request.env['wave.transaction'].sudo().create({
                     'wave_id': data.get('id'),
@@ -707,6 +709,8 @@ class WaveMoneyController(http.Controller):
         except Exception as e:
             _logger.error(f"Error processing Wave webhook: {str(e)}")
             return Response(json.dumps({'error': 'Internal server error'}), status=200, mimetype='application/json')
+
+
 
     def convert_iso_format_to_custom_format(self , iso_date):
         try:
